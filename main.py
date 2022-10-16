@@ -64,13 +64,27 @@ with beam.Pipeline() as pipeline:
         )
     )
     
+    prepare_data_to_json = (
+        joined_dicts
+        | beam.Map(
+            lambda x: {
+                "Regiao": x['Regiao'],
+                "Estado": x.get('Estado', ''),
+                "UF": x.get('UF', ''),
+                "Governador": x.get('Governador', ''),
+                "TotalCasos": x['TotalCasos'],
+                "TotalObitos": x['TotalObitos']
+            }
+        )
+
+    )
+
     data_to_json = (
-        joined_dicts 
+        prepare_data_to_json 
         | beam.Map(lambda x: (1, x))
         | beam.GroupByKey()
-        | beam.Map(lambda x: json.dumps(x[1]))
-        # | beam.Map(print)
-        | beam.io.WriteToText("json_covid_brasil", file_name_suffix='.txt')
+        | beam.Map(lambda x: json.dumps(x[1], ensure_ascii=False).encode('utf8'))
+        | beam.io.WriteToText("new_json_covid_brasil", file_name_suffix='.json')
     )
 
 
