@@ -1,3 +1,4 @@
+import json
 import apache_beam as beam
 import csv
 
@@ -62,5 +63,15 @@ with beam.Pipeline() as pipeline:
             "covid_brasil", file_name_suffix=".csv", header=csv_header
         )
     )
+    
+    data_to_json = (
+        joined_dicts 
+        | beam.Map(lambda x: (1, x))
+        | beam.GroupByKey()
+        | beam.Map(lambda x: json.dumps(x[1]))
+        # | beam.Map(print)
+        | beam.io.WriteToText("json_covid_brasil", file_name_suffix='.txt')
+    )
 
-    data_to_json = joined_dicts | beam.Map(print)
+
+    # data_to_json.show
