@@ -41,6 +41,9 @@ were extracted from the IBGE and Corona Virus Brazil website:
 ## What to be done
 After an exploratory data analysis, it was noticed that the key that connects the two datasets is the state code (integer number). And two things need to be done: Get the data on the governor's name and the state's name from the IBGE base and aggregate the covid base entries, adding the new cases and new deaths to get the total. Some entries were not associated with a city/state and it was decided that they would be added to the 'Brasil' region
 
+## Why use Apache Beam
+Beam is particularly useful for parallel data processing tasks, in which the problem can be decomposed into many smaller bundles of data that can be processed independently and in parallel. This task is basicaly an ETL and beam can be used for optimizing the process, in addition to having clear advantages as the size of the databases increases.
+
 The first step of the pipeline was to read the covid data file and generate a Pcollections in the format `(('Norte', 'TO', '17'), ('2', '0'))`, being the (Regiao, UF, coduf) as key and (new cases, new deaths) as values. After that, beam.CombinePerKey was used with a lambda function to sum all the cases and deaths, obtaining the following result:
 
 ```
