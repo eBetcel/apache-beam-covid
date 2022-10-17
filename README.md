@@ -44,6 +44,7 @@ After an exploratory data analysis, it was noticed that the key that connects th
 ## Why use Apache Beam
 Beam is particularly useful for parallel data processing tasks, in which the problem can be decomposed into many smaller bundles of data that can be processed independently and in parallel. This task is basicaly an ETL and beam can be used for optimizing the process, in addition to having clear advantages as the size of the databases increases.
 
+## Starting
 The first step of the pipeline was to read the covid data file and generate a Pcollections in the format `(('Norte', 'TO', '17'), ('2', '0'))`, being the (Regiao, UF, coduf) as key and (new cases, new deaths) as values. After that, beam.CombinePerKey was used with a lambda function to sum all the cases and deaths, obtaining the following result:
 
 ```
